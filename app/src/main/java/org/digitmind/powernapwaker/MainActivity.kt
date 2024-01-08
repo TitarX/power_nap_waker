@@ -1,40 +1,63 @@
 package org.digitmind.powernapwaker
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.widget.Button
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import java.time.LocalDateTime
+import java.util.Timer
+import kotlin.concurrent.timerTask
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Запускаем часы с вкладкой будильников
+        // Потребовалось для корректного создания двух будильников
+        // на "Xiaomi Redmi Note 8 (2021)"
+        val alarmClockIntent = Intent(AlarmClock.ACTION_SHOW_ALARMS)
+        alarmClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        alarmClockIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        alarmClockIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        startActivity(alarmClockIntent)
+
+        // Создание нескольких активити
+        // Оставил для примера
+        // TaskStackBuilder.create(this)
+        //     .addNextIntent(alarmClockIntent)
+        //     .startActivities()
+
+        val thisActivity = this
+
+        // Задержка 2 секунды
+        Timer().schedule(timerTask {
+            // Возвращаемся к приложению
+            startActivity(thisActivity.intent)
+        }, 2000)
+
         val startButton = findViewById<Button>(R.id.startButton)
         startButton.setOnClickListener {
-            val powerNapWaker1Time = LocalDateTime.now().plusMinutes(20)
-            val powerNapWaker2Time = LocalDateTime.now().plusMinutes(30)
+            // Задержка 2 секунды
+            Timer().schedule(timerTask {
+                // Задаём будильник на 20 минут от текущего времени
+                MscHelper.setAlarmClock(
+                    thisActivity,
+                    LocalDateTime.now().plusMinutes(20),
+                    "PowerNapWaker1"
+                )
+            }, 2000)
 
-            val alarmClockIntent1 = Intent(AlarmClock.ACTION_SET_ALARM)
-            alarmClockIntent1.putExtra(AlarmClock.EXTRA_MESSAGE, "PowerNapWaker1")
-            alarmClockIntent1.putExtra(AlarmClock.EXTRA_HOUR, powerNapWaker1Time.hour)
-            alarmClockIntent1.putExtra(AlarmClock.EXTRA_MINUTES, powerNapWaker1Time.minute)
-            startActivity(alarmClockIntent1)
-
-            val alarmClockIntent2 = Intent(AlarmClock.ACTION_SET_ALARM)
-            alarmClockIntent2.putExtra(AlarmClock.EXTRA_MESSAGE, "PowerNapWaker2")
-            alarmClockIntent2.putExtra(AlarmClock.EXTRA_HOUR, powerNapWaker2Time.hour)
-            alarmClockIntent2.putExtra(AlarmClock.EXTRA_MINUTES, powerNapWaker2Time.minute)
-            startActivity(alarmClockIntent2)
-
-            Toast.makeText(
-                this,
-                R.string.result_success,
-                Toast.LENGTH_SHORT
-            ).show()
+            // Задержка 2 секунды
+            Timer().schedule(timerTask {
+                // Задаём будильник на 30 минут от текущего времени
+                MscHelper.setAlarmClock(
+                    thisActivity,
+                    LocalDateTime.now().plusMinutes(30),
+                    "PowerNapWaker2"
+                )
+            }, 2000)
         }
     }
 }
