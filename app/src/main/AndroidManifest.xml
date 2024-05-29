@@ -2,7 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Allows an application to broadcast an Intent to set an alarm for the user -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <!-- Allows a companion app to run in the background -->
+    <uses-permission android:name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND" />
+    <!-- Allows a companion app to use data in the background -->
+    <uses-permission android:name="android.permission.REQUEST_COMPANION_USE_DATA_IN_BACKGROUND" />
+    <!-- Allows an application to call ActivityManager.killBackgroundProcesses(String) -->
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <!-- Allows an application to start foreground services from the background at any time -->
+    <uses-permission android:name="android.permission.START_FOREGROUND_SERVICES_FROM_BACKGROUND"
+            tools:ignore="ProtectedPermissions" />
 
     <application
             android:allowBackup="true"

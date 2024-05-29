@@ -2,7 +2,7 @@
     <string name="app_name">PowerNapWaker</string>
     <string name="button">Задать будильник</string>
     <string name="textview">
-        Приложение создаёт два будильника,\nна 20 и 10 минут от текущего времени.
+        Приложение создаёт три будильника,\nчерез каждые 20 минут от текущего времени.
     </string>
     <string name="result_success">Будильник %1$s успешно задан</string>
     <string name="result_fail">Не удалось задать будильник %1$s</string>
