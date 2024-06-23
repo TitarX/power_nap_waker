@@ -15,12 +15,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Запускаем часы с вкладкой будильников
-        // Потребовалось для корректного создания двух будильников
-        // на "Xiaomi Redmi Note 8 (2021)"
         val alarmClockIntent = Intent(AlarmClock.ACTION_SHOW_ALARMS)
         alarmClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        alarmClockIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        alarmClockIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        alarmClockIntent.setFlags(Intent.FLAG_FROM_BACKGROUND)
         startActivity(alarmClockIntent)
 
         // Создание нескольких активити
@@ -34,11 +31,16 @@ class MainActivity : AppCompatActivity() {
         // Задержка 2 секунды
         Timer().schedule(timerTask {
             // Возвращаемся к приложению
-            startActivity(thisActivity.intent)
-        }, 2000)
+            val thisActivityIndent = thisActivity.intent
+            thisActivityIndent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            startActivity(thisActivityIndent)
+        }, 1500)
 
         val startButton = findViewById<Button>(R.id.startButton)
         startButton.setOnClickListener {
+            startButton.isEnabled = false
+            startButton.setBackgroundColor(resources.getColor(R.color.grey, null))
+
             // Задержка 2 секунды
             Timer().schedule(timerTask {
                 // Задаём будильник на 20 минут от текущего времени
@@ -47,17 +49,17 @@ class MainActivity : AppCompatActivity() {
                     LocalDateTime.now().plusMinutes(20),
                     "PowerNapWaker1"
                 )
-            }, 2000)
 
-            // Задержка 2 секунды
-            Timer().schedule(timerTask {
                 // Задаём будильник на 120 минут от текущего времени
                 MscHelper.setAlarmClock(
                     thisActivity,
                     LocalDateTime.now().plusMinutes(120),
                     "PowerNapWaker2"
                 )
-            }, 2000)
+
+                startButton.isEnabled = true
+                startButton.setBackgroundColor(resources.getColor(R.color.green, null))
+            }, 1500)
         }
     }
 }
