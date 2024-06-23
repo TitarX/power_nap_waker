@@ -17,7 +17,8 @@ class MainActivity : AppCompatActivity() {
         // Запускаем часы с вкладкой будильников
         val alarmClockIntent = Intent(AlarmClock.ACTION_SHOW_ALARMS)
         alarmClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        alarmClockIntent.setFlags(Intent.FLAG_FROM_BACKGROUND)
+        alarmClockIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        alarmClockIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         startActivity(alarmClockIntent)
 
         // Создание нескольких активити
@@ -32,16 +33,22 @@ class MainActivity : AppCompatActivity() {
         Timer().schedule(timerTask {
             // Возвращаемся к приложению
             val thisActivityIndent = thisActivity.intent
+
+            // Если такая задача уже имеется, то новая не создаётся, а выводится на передний план имеющаяся
+            thisActivityIndent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            // Ищет эту задачу в стеке задач и выводит на передний план
             thisActivityIndent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+
             startActivity(thisActivityIndent)
-        }, 1500)
+        }, 2000)
 
         val startButton = findViewById<Button>(R.id.startButton)
         startButton.setOnClickListener {
             startButton.isEnabled = false
             startButton.setBackgroundColor(resources.getColor(R.color.grey, null))
 
-            // Задержка 2 секунды
+            // Задержка 1 секунда
             Timer().schedule(timerTask {
                 // Задаём будильник на 20 минут от текущего времени
                 MscHelper.setAlarmClock(
@@ -56,10 +63,7 @@ class MainActivity : AppCompatActivity() {
                     LocalDateTime.now().plusMinutes(120),
                     "PowerNapWaker2"
                 )
-
-                startButton.isEnabled = true
-                startButton.setBackgroundColor(resources.getColor(R.color.green, null))
-            }, 1500)
+            }, 1000)
         }
     }
 }
