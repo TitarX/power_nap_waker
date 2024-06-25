@@ -57,10 +57,10 @@ class MainActivity : AppCompatActivity() {
                     "PowerNapWaker1"
                 )
 
-                // Задаём будильник на 120 минут от текущего времени
+                // Задаём будильник на 30 минут от текущего времени
                 MscHelper.setAlarmClock(
                     thisActivity,
-                    LocalDateTime.now().plusMinutes(120),
+                    LocalDateTime.now().plusMinutes(30),
                     "PowerNapWaker2"
                 )
             }, 1000)
